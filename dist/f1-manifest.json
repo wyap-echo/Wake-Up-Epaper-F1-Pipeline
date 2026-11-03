@@ -1,0 +1,24 @@
+{
+  "schema": "wake-epaper-f1-manifest/1",
+  "current": {
+    "role": "current",
+    "year": 2026,
+    "file": "f1-2026.f1p",
+    "size": 8450,
+    "sha256": "12726a00cfb7cbb6c689422c0a003292951b877d47e758c87a050fcdd83424d6",
+    "records": 23,
+    "has_podium": true,
+    "generated_utc": 1793694323
+  },
+  "next": {
+    "role": "next",
+    "year": 2027,
+    "file": "f1-2027.f1p",
+    "size": 8816,
+    "sha256": "f2c0025e6ae48d00f80a54a7f77be574a5eacbc34792b425472a24595fa7e422",
+    "records": 24,
+    "has_podium": false,
+    "generated_utc": 1793694324
+  },
+  "published_at": "2026-11-03T08:25:24Z"
+}
