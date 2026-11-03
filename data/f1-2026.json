@@ -1,0 +1,901 @@
+{
+  "schema": "wake-epaper-f1-snapshot/1",
+  "season": 2026,
+  "source_url": "https://www.formula1.com/en/racing/2026",
+  "source_page_sha256": "4b74ff5448d17a9918f0c4f1e20d530087712b9c897c2071a855091bfefdbb03",
+  "race_count": 23,
+  "podium_count": 19,
+  "races": [
+    {
+      "round": 1,
+      "country": "Australia",
+      "race_name": "Australian Grand Prix",
+      "race_start_epoch": 1772942400,
+      "race_start_local": "2026-03-08T15:00:00+11:00",
+      "race_beijing": "03/08 12:00",
+      "circuit_short_name": "Melbourne",
+      "stats": {
+        "length_km": "5.278",
+        "laps": "58",
+        "distance_km": "306.124",
+        "first_grand_prix": "1996",
+        "fastest_lap_time": "1:19.813",
+        "fastest_lap_driver": "Charles Leclerc",
+        "fastest_lap_year": "2024",
+        "fastest_lap_team": "Scuderia Ferrari",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "1:23:06.801"
+        },
+        {
+          "position": 2,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+2.974"
+        },
+        {
+          "position": 3,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "+15.519"
+        }
+      ],
+      "winner_time": "1:23:06.801",
+      "source_url": "https://www.formula1.com/en/racing/2026/australia"
+    },
+    {
+      "round": 2,
+      "country": "China",
+      "race_name": "Chinese Grand Prix",
+      "race_start_epoch": 1773558000,
+      "race_start_local": "2026-03-15T15:00:00+08:00",
+      "race_beijing": "03/15 15:00",
+      "circuit_short_name": "Shanghai",
+      "stats": {
+        "length_km": "5.451",
+        "laps": "56",
+        "distance_km": "305.066",
+        "first_grand_prix": "2004",
+        "fastest_lap_time": "1:32.238",
+        "fastest_lap_driver": "Michael Schumacher",
+        "fastest_lap_year": "2004",
+        "fastest_lap_team": "Scuderia Ferrari Marlboro",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:33:15.607"
+        },
+        {
+          "position": 2,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "+5.515"
+        },
+        {
+          "position": 3,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+25.267"
+        }
+      ],
+      "winner_time": "1:33:15.607",
+      "source_url": "https://www.formula1.com/en/racing/2026/china"
+    },
+    {
+      "round": 3,
+      "country": "Japan",
+      "race_name": "Japanese Grand Prix",
+      "race_start_epoch": 1774760400,
+      "race_start_local": "2026-03-29T14:00:00+09:00",
+      "race_beijing": "03/29 13:00",
+      "circuit_short_name": "Suzuka",
+      "stats": {
+        "length_km": "5.807",
+        "laps": "53",
+        "distance_km": "307.471",
+        "first_grand_prix": "1987",
+        "fastest_lap_time": "1:30.965",
+        "fastest_lap_driver": "Kimi Antonelli",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "Mercedes-AMG PETRONAS F1 Team",
+        "direction": "8"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:28:03.403"
+        },
+        {
+          "position": 2,
+          "name": "Piastri",
+          "code": "PIA",
+          "result": "+13.722"
+        },
+        {
+          "position": 3,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "+15.27"
+        }
+      ],
+      "winner_time": "1:28:03.403",
+      "source_url": "https://www.formula1.com/en/racing/2026/japan"
+    },
+    {
+      "round": 4,
+      "country": "United States",
+      "race_name": "Miami Grand Prix",
+      "race_start_epoch": 1777827600,
+      "race_start_local": "2026-05-03T13:00:00-04:00",
+      "race_beijing": "05/04 01:00",
+      "circuit_short_name": "Miami",
+      "stats": {
+        "length_km": "5.412",
+        "laps": "57",
+        "distance_km": "308.326",
+        "first_grand_prix": "2022",
+        "fastest_lap_time": "1:29.708",
+        "fastest_lap_driver": "Max Verstappen",
+        "fastest_lap_year": "2023",
+        "fastest_lap_team": "Oracle Red Bull Racing",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:33:19.273"
+        },
+        {
+          "position": 2,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "+3.264"
+        },
+        {
+          "position": 3,
+          "name": "Piastri",
+          "code": "PIA",
+          "result": "+27.092"
+        }
+      ],
+      "winner_time": "1:33:19.273",
+      "source_url": "https://www.formula1.com/en/racing/2026/miami"
+    },
+    {
+      "round": 5,
+      "country": "Canada",
+      "race_name": "Canadian Grand Prix",
+      "race_start_epoch": 1779652800,
+      "race_start_local": "2026-05-24T16:00:00-04:00",
+      "race_beijing": "05/25 04:00",
+      "circuit_short_name": "Montreal",
+      "stats": {
+        "length_km": "4.361",
+        "laps": "70",
+        "distance_km": "305.27",
+        "first_grand_prix": "1978",
+        "fastest_lap_time": "1:13.078",
+        "fastest_lap_driver": "Valtteri Bottas",
+        "fastest_lap_year": "2019",
+        "fastest_lap_team": "Mercedes AMG Petronas Motorsport",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:28:15.758"
+        },
+        {
+          "position": 2,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+10.768"
+        },
+        {
+          "position": 3,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+11.276"
+        }
+      ],
+      "winner_time": "1:28:15.758",
+      "source_url": "https://www.formula1.com/en/racing/2026/canada"
+    },
+    {
+      "round": 6,
+      "country": "Monaco",
+      "race_name": "Monaco Grand Prix",
+      "race_start_epoch": 1780837200,
+      "race_start_local": "2026-06-07T15:00:00+02:00",
+      "race_beijing": "06/07 21:00",
+      "circuit_short_name": "Monte Carlo",
+      "stats": {
+        "length_km": "3.337",
+        "laps": "78",
+        "distance_km": "260.286",
+        "first_grand_prix": "1950",
+        "fastest_lap_time": "1:12.909",
+        "fastest_lap_driver": "Lewis Hamilton",
+        "fastest_lap_year": "2021",
+        "fastest_lap_team": "Mercedes-AMG Petronas F1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "2:23:31.243"
+        },
+        {
+          "position": 2,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+6.271"
+        },
+        {
+          "position": 3,
+          "name": "Hadjar",
+          "code": "HAD",
+          "result": "+23.394"
+        }
+      ],
+      "winner_time": "2:23:31.243",
+      "source_url": "https://www.formula1.com/en/racing/2026/monaco"
+    },
+    {
+      "round": 7,
+      "country": "Spain",
+      "race_name": "Barcelona Grand Prix",
+      "race_start_epoch": 1781442000,
+      "race_start_local": "2026-06-14T15:00:00+02:00",
+      "race_beijing": "06/14 21:00",
+      "circuit_short_name": "Catalunya",
+      "stats": {
+        "length_km": "4.657",
+        "laps": "66",
+        "distance_km": "307.236",
+        "first_grand_prix": "1991",
+        "fastest_lap_time": "1:15.743",
+        "fastest_lap_driver": "Oscar Piastri",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "McLaren Formula 1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "1:32:28.105"
+        },
+        {
+          "position": 2,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "+19.561"
+        },
+        {
+          "position": 3,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "+23.719"
+        }
+      ],
+      "winner_time": "1:32:28.105",
+      "source_url": "https://www.formula1.com/en/racing/2026/barcelona-catalunya"
+    },
+    {
+      "round": 8,
+      "country": "Austria",
+      "race_name": "Austrian Grand Prix",
+      "race_start_epoch": 1782651600,
+      "race_start_local": "2026-06-28T15:00:00+02:00",
+      "race_beijing": "06/28 21:00",
+      "circuit_short_name": "Spielberg",
+      "stats": {
+        "length_km": "4.326",
+        "laps": "71",
+        "distance_km": "307.026",
+        "first_grand_prix": "1970",
+        "fastest_lap_time": "1:07.924",
+        "fastest_lap_driver": "Oscar Piastri",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "McLaren Formula 1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "1:26:37.979"
+        },
+        {
+          "position": 2,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+1.611"
+        },
+        {
+          "position": 3,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+1.986"
+        }
+      ],
+      "winner_time": "1:26:37.979",
+      "source_url": "https://www.formula1.com/en/racing/2026/austria"
+    },
+    {
+      "round": 9,
+      "country": "United Kingdom",
+      "race_name": "British Grand Prix",
+      "race_start_epoch": 1783260000,
+      "race_start_local": "2026-07-05T15:00:00+01:00",
+      "race_beijing": "07/05 22:00",
+      "circuit_short_name": "Silverstone",
+      "stats": {
+        "length_km": "5.891",
+        "laps": "52",
+        "distance_km": "306.198",
+        "first_grand_prix": "1950",
+        "fastest_lap_time": "1:27.097",
+        "fastest_lap_driver": "Max Verstappen",
+        "fastest_lap_year": "2020",
+        "fastest_lap_team": "Aston Martin Red Bull Racing",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "1:27:11.335"
+        },
+        {
+          "position": 2,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "+0.427"
+        },
+        {
+          "position": 3,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+0.772"
+        }
+      ],
+      "winner_time": "1:27:11.335",
+      "source_url": "https://www.formula1.com/en/racing/2026/great-britain"
+    },
+    {
+      "round": 10,
+      "country": "Belgium",
+      "race_name": "Belgian Grand Prix",
+      "race_start_epoch": 1784466000,
+      "race_start_local": "2026-07-19T15:00:00+02:00",
+      "race_beijing": "07/19 21:00",
+      "circuit_short_name": "Spa-Francorchamps",
+      "stats": {
+        "length_km": "7.004",
+        "laps": "44",
+        "distance_km": "308.054",
+        "first_grand_prix": "1950",
+        "fastest_lap_time": "1:44.701",
+        "fastest_lap_driver": "Sergio Perez",
+        "fastest_lap_year": "2024",
+        "fastest_lap_team": "Oracle Red Bull Racing",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:24:42.479"
+        },
+        {
+          "position": 2,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "+1.952"
+        },
+        {
+          "position": 3,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+11.586"
+        }
+      ],
+      "winner_time": "1:24:42.479",
+      "source_url": "https://www.formula1.com/en/racing/2026/belgium"
+    },
+    {
+      "round": 11,
+      "country": "Hungary",
+      "race_name": "Hungarian Grand Prix",
+      "race_start_epoch": 1785070800,
+      "race_start_local": "2026-07-26T15:00:00+02:00",
+      "race_beijing": "07/26 21:00",
+      "circuit_short_name": "Hungaroring",
+      "stats": {
+        "length_km": "4.381",
+        "laps": "70",
+        "distance_km": "306.63",
+        "first_grand_prix": "1986",
+        "fastest_lap_time": "1:16.627",
+        "fastest_lap_driver": "Lewis Hamilton",
+        "fastest_lap_year": "2020",
+        "fastest_lap_team": "Mercedes-AMG Petronas F1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "1:39:56.180"
+        },
+        {
+          "position": 2,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+15.08"
+        },
+        {
+          "position": 3,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+18.728"
+        }
+      ],
+      "winner_time": "1:39:56.180",
+      "source_url": "https://www.formula1.com/en/racing/2026/hungary"
+    },
+    {
+      "round": 12,
+      "country": "Netherlands",
+      "race_name": "Dutch Grand Prix",
+      "race_start_epoch": 1787490000,
+      "race_start_local": "2026-08-23T15:00:00+02:00",
+      "race_beijing": "08/23 21:00",
+      "circuit_short_name": "Zandvoort",
+      "stats": {
+        "length_km": "4.259",
+        "laps": "72",
+        "distance_km": "306.592",
+        "first_grand_prix": "1952",
+        "fastest_lap_time": "1:11.097",
+        "fastest_lap_driver": "Lewis Hamilton",
+        "fastest_lap_year": "2021",
+        "fastest_lap_team": "Mercedes-AMG Petronas F1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "2:04:44.859"
+        },
+        {
+          "position": 2,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+11.536"
+        },
+        {
+          "position": 3,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "+15.906"
+        }
+      ],
+      "winner_time": "2:04:44.859",
+      "source_url": "https://www.formula1.com/en/racing/2026/netherlands"
+    },
+    {
+      "round": 13,
+      "country": "Italy",
+      "race_name": "Italian Grand Prix",
+      "race_start_epoch": 1788699600,
+      "race_start_local": "2026-09-06T15:00:00+02:00",
+      "race_beijing": "09/06 21:00",
+      "circuit_short_name": "Monza",
+      "stats": {
+        "length_km": "5.793",
+        "laps": "53",
+        "distance_km": "306.72",
+        "first_grand_prix": "1950",
+        "fastest_lap_time": "1:20.901",
+        "fastest_lap_driver": "Lando Norris",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "McLaren Formula 1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:51:15.281"
+        },
+        {
+          "position": 2,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "+3.857"
+        },
+        {
+          "position": 3,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+14.718"
+        }
+      ],
+      "winner_time": "1:51:15.281",
+      "source_url": "https://www.formula1.com/en/racing/2026/italy"
+    },
+    {
+      "round": 14,
+      "country": "Spain",
+      "race_name": "Spanish Grand Prix",
+      "race_start_epoch": 1789304400,
+      "race_start_local": "2026-09-13T15:00:00+02:00",
+      "race_beijing": "09/13 21:00",
+      "circuit_short_name": "Madring",
+      "stats": {
+        "length_km": "5.414",
+        "laps": "57",
+        "distance_km": "308.399",
+        "first_grand_prix": "2026",
+        "fastest_lap_time": "1:35.587",
+        "fastest_lap_driver": "George Russell",
+        "fastest_lap_year": "2026",
+        "fastest_lap_team": "Mercedes-AMG PETRONAS Formula One Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:34:23.754"
+        },
+        {
+          "position": 2,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+4.351"
+        },
+        {
+          "position": 3,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "+5.089"
+        }
+      ],
+      "winner_time": "1:34:23.754",
+      "source_url": "https://www.formula1.com/en/racing/2026/spain"
+    },
+    {
+      "round": 15,
+      "country": "Azerbaijan",
+      "race_name": "Azerbaijan Grand Prix",
+      "race_start_epoch": 1790420400,
+      "race_start_local": "2026-09-26T15:00:00+04:00",
+      "race_beijing": "09/26 19:00",
+      "circuit_short_name": "Baku",
+      "stats": {
+        "length_km": "6.003",
+        "laps": "51",
+        "distance_km": "306.042",
+        "first_grand_prix": "2016",
+        "fastest_lap_time": "1:43.009",
+        "fastest_lap_driver": "Charles Leclerc",
+        "fastest_lap_year": "2019",
+        "fastest_lap_team": "Scuderia Ferrari Mission Winnow",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Russell",
+          "code": "RUS",
+          "result": "1:38:02.143"
+        },
+        {
+          "position": 2,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+0.196"
+        },
+        {
+          "position": 3,
+          "name": "Hadjar",
+          "code": "HAD",
+          "result": "+10.704"
+        }
+      ],
+      "winner_time": "1:38:02.143",
+      "source_url": "https://www.formula1.com/en/racing/2026/azerbaijan"
+    },
+    {
+      "round": 16,
+      "country": "Malaysia",
+      "race_name": "Bahrain Grand Prix",
+      "race_start_epoch": 1791097200,
+      "race_start_local": "2026-10-04T15:00:00+08:00",
+      "race_beijing": "10/04 15:00",
+      "circuit_short_name": "Kuala Lumpur",
+      "stats": {
+        "length_km": "5.543",
+        "laps": "56",
+        "distance_km": "310.417",
+        "first_grand_prix": "1999",
+        "fastest_lap_time": "1:34.080",
+        "fastest_lap_driver": "Sebastian Vettel",
+        "fastest_lap_year": "2017",
+        "fastest_lap_team": "Scuderia Ferrari",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "1:47:14.808"
+        },
+        {
+          "position": 2,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+2.307"
+        },
+        {
+          "position": 3,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+4.919"
+        }
+      ],
+      "winner_time": "1:47:14.808",
+      "source_url": "https://www.formula1.com/en/racing/2026/bahrain"
+    },
+    {
+      "round": 17,
+      "country": "Singapore",
+      "race_name": "Singapore Grand Prix",
+      "race_start_epoch": 1791720000,
+      "race_start_local": "2026-10-11T20:00:00+08:00",
+      "race_beijing": "10/11 20:00",
+      "circuit_short_name": "Singapore",
+      "stats": {
+        "length_km": "4.927",
+        "laps": "62",
+        "distance_km": "305.337",
+        "first_grand_prix": "2008",
+        "fastest_lap_time": "1:33.808",
+        "fastest_lap_driver": "Lewis Hamilton",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "Scuderia Ferrari HP",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "1:42:00.785"
+        },
+        {
+          "position": 2,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "+7.335"
+        },
+        {
+          "position": 3,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+24.573"
+        }
+      ],
+      "winner_time": "1:42:00.785",
+      "source_url": "https://www.formula1.com/en/racing/2026/singapore"
+    },
+    {
+      "round": 18,
+      "country": "United States",
+      "race_name": "United States Grand Prix",
+      "race_start_epoch": 1792958400,
+      "race_start_local": "2026-10-25T15:00:00-05:00",
+      "race_beijing": "10/26 04:00",
+      "circuit_short_name": "Austin",
+      "stats": {
+        "length_km": "5.513",
+        "laps": "56",
+        "distance_km": "308.432",
+        "first_grand_prix": "2012",
+        "fastest_lap_time": "1:36.169",
+        "fastest_lap_driver": "Charles Leclerc",
+        "fastest_lap_year": "2019",
+        "fastest_lap_team": "Scuderia Ferrari Mission Winnow",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "1:35:16.650"
+        },
+        {
+          "position": 2,
+          "name": "Leclerc",
+          "code": "LEC",
+          "result": "+13.078"
+        },
+        {
+          "position": 3,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+17.485"
+        }
+      ],
+      "winner_time": "1:35:16.650",
+      "source_url": "https://www.formula1.com/en/racing/2026/united-states"
+    },
+    {
+      "round": 19,
+      "country": "Mexico",
+      "race_name": "Mexico City Grand Prix",
+      "race_start_epoch": 1793563200,
+      "race_start_local": "2026-11-01T14:00:00-06:00",
+      "race_beijing": "11/02 04:00",
+      "circuit_short_name": "Mexico City",
+      "stats": {
+        "length_km": "4.304",
+        "laps": "71",
+        "distance_km": "305.354",
+        "first_grand_prix": "1963",
+        "fastest_lap_time": "1:17.774",
+        "fastest_lap_driver": "Valtteri Bottas",
+        "fastest_lap_year": "2021",
+        "fastest_lap_team": "Mercedes-AMG Petronas F1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": [
+        {
+          "position": 1,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "2:20:28.772"
+        },
+        {
+          "position": 2,
+          "name": "Hamilton",
+          "code": "HAM",
+          "result": "+0.799"
+        },
+        {
+          "position": 3,
+          "name": "Antonelli",
+          "code": "ANT",
+          "result": "+4.006"
+        }
+      ],
+      "winner_time": "2:20:28.772",
+      "source_url": "https://www.formula1.com/en/racing/2026/mexico"
+    },
+    {
+      "round": 20,
+      "country": "Brazil",
+      "race_name": "São Paulo Grand Prix",
+      "race_start_epoch": 1794157200,
+      "race_start_local": "2026-11-08T14:00:00-03:00",
+      "race_beijing": "11/09 01:00",
+      "circuit_short_name": "Interlagos",
+      "stats": {
+        "length_km": "4.309",
+        "laps": "71",
+        "distance_km": "305.879",
+        "first_grand_prix": "1973",
+        "fastest_lap_time": "1:10.540",
+        "fastest_lap_driver": "Valtteri Bottas",
+        "fastest_lap_year": "2018",
+        "fastest_lap_team": "Mercedes AMG Petronas Motorsport",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": null,
+      "winner_time": "",
+      "source_url": "https://www.formula1.com/en/racing/2026/brazil"
+    },
+    {
+      "round": 21,
+      "country": "United States",
+      "race_name": "Las Vegas Grand Prix",
+      "race_start_epoch": 1795320000,
+      "race_start_local": "2026-11-21T20:00:00-08:00",
+      "race_beijing": "11/22 12:00",
+      "circuit_short_name": "Las Vegas",
+      "stats": {
+        "length_km": "6.201",
+        "laps": "50",
+        "distance_km": "309.958",
+        "first_grand_prix": "2023",
+        "fastest_lap_time": "1:33.365",
+        "fastest_lap_driver": "Max Verstappen",
+        "fastest_lap_year": "2025",
+        "fastest_lap_team": "Oracle Red Bull Racing",
+        "direction": "Anti-Clockwise"
+      },
+      "podium": null,
+      "winner_time": "",
+      "source_url": "https://www.formula1.com/en/racing/2026/las-vegas"
+    },
+    {
+      "round": 22,
+      "country": "Qatar",
+      "race_name": "Qatar Grand Prix",
+      "race_start_epoch": 1795968000,
+      "race_start_local": "2026-11-29T19:00:00+03:00",
+      "race_beijing": "11/30 00:00",
+      "circuit_short_name": "Lusail",
+      "stats": {
+        "length_km": "5.419",
+        "laps": "57",
+        "distance_km": "308.611",
+        "first_grand_prix": "2021",
+        "fastest_lap_time": "1:22.384",
+        "fastest_lap_driver": "Lando Norris",
+        "fastest_lap_year": "2024",
+        "fastest_lap_team": "McLaren Formula 1 Team",
+        "direction": "Clockwise"
+      },
+      "podium": null,
+      "winner_time": "",
+      "source_url": "https://www.formula1.com/en/racing/2026/qatar"
+    },
+    {
+      "round": 23,
+      "country": "United Arab Emirates",
+      "race_name": "Abu Dhabi Grand Prix",
+      "race_start_epoch": 1796562000,
+      "race_start_local": "2026-12-06T17:00:00+04:00",
+      "race_beijing": "12/06 21:00",
+      "circuit_short_name": "Yas Marina Circuit",
+      "stats": {
+        "length_km": "5.281",
+        "laps": "58",
+        "distance_km": "306.188",
+        "first_grand_prix": "2009",
+        "fastest_lap_time": "1:25.637",
+        "fastest_lap_driver": "Kevin Magnussen",
+        "fastest_lap_year": "2024",
+        "fastest_lap_team": "MoneyGram Haas F1 Team",
+        "direction": "Anticlockwise"
+      },
+      "podium": null,
+      "winner_time": "",
+      "source_url": "https://www.formula1.com/en/racing/2026/united-arab-emirates"
+    }
+  ],
+  "published_at": "2026-11-03T08:14:41Z"
+}
