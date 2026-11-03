@@ -11,6 +11,9 @@ only when meaningful F1 data changes.
 
 - `data/f1-2026.json`: current-season snapshot.
 - `data/f1-2027.json`: next-season snapshot once the season page is available.
+- `dist/f1-YYYY.f1p`: compact binary pack for the firmware.
+- `dist/f1-manifest.json`: current/next pack sizes, SHA-256 values, and format
+  metadata.
 - Workflow artifact: complete collector output, including source hashes and
   optional circuit assets.
 
@@ -27,6 +30,21 @@ an optional podium:
 ```
 
 Upcoming races keep `"podium": null`.
+
+## Compact F1P2 pack
+
+`tools/build_f1_pack.py` creates an `F1P2` pack without embedded circuit maps.
+The current UI does not display those maps. The pack contains:
+
+- Race and meeting epoch times.
+- Country, Beijing time, circuit, length, laps and distance.
+- Historical fastest lap information.
+- Three podium entries with code, name and result.
+- Header size, record size, record count, payload length, CRC32 and generation
+  epoch.
+
+The 2027 calendar pack is about 8.8 KB rather than the previous 130 KB map-heavy
+pack. It is built only from validated stable snapshots.
 
 ## Workflows
 

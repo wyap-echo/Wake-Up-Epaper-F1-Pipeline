@@ -73,12 +73,17 @@ def stable_snapshot(document: dict[str, Any], year: int) -> dict[str, Any]:
                 "round": round_number,
                 "country": country,
                 "race_name": race_name,
+                "meeting_start_utc": str(race.get("meeting_start_utc", "")),
+                "meeting_end_utc": str(race.get("meeting_end_utc", "")),
+                "timezone": str(race.get("timezone", "")),
+                "gmt_offset": str(race.get("gmt_offset", "")),
                 "race_start_epoch": race_start_epoch,
                 "race_start_local": str(race.get("race_start_local", "")),
                 "race_beijing": beijing,
                 "circuit_short_name": str(
                     race.get("circuit_short_name", "")
                 ),
+                "circuit_location": str(race.get("circuit_location", "")),
                 "stats": race.get("stats", {}),
                 "podium": podium,
                 "winner_time": (

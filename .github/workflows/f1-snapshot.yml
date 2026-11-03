@@ -89,25 +89,54 @@ jobs:
             "data/f1-${{ steps.seasons.outputs.next }}.json" \
             --expected-year "${{ steps.seasons.outputs.next }}"
 
+      - name: Build compact current pack
+        shell: bash
+        run: |
+          mkdir -p dist
+          python tools/build_f1_pack.py \
+            "data/f1-${{ steps.seasons.outputs.current }}.json" \
+            "dist/f1-${{ steps.seasons.outputs.current }}.f1p" \
+            --expected-year "${{ steps.seasons.outputs.current }}"
+
+      - name: Build compact next pack
+        if: steps.next.outputs.available == 'true'
+        shell: bash
+        run: |
+          python tools/build_f1_pack.py \
+            "data/f1-${{ steps.seasons.outputs.next }}.json" \
+            "dist/f1-${{ steps.seasons.outputs.next }}.f1p" \
+            --expected-year "${{ steps.seasons.outputs.next }}"
+
+      - name: Build device manifest
+        if: steps.next.outputs.available == 'true'
+        shell: bash
+        run: |
+          python tools/build_manifest.py \
+            --current "dist/f1-${{ steps.seasons.outputs.current }}.f1p" \
+            --next "dist/f1-${{ steps.seasons.outputs.next }}.f1p" \
+            --output dist/f1-manifest.json
+
       - name: Upload complete extraction
         uses: actions/upload-artifact@v4
         with:
           name: f1-extraction-${{ github.run_id }}
-          path: artifacts/
+          path: |
+            artifacts/
+            dist/
           if-no-files-found: error
           retention-days: 30
 
-      - name: Commit changed snapshots
+      - name: Commit changed snapshots and packs
         shell: bash
         run: |
-          git add data
-          if git diff --cached --quiet -- data; then
+          git add data dist
+          if git diff --cached --quiet -- data dist; then
             echo "No meaningful F1 data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update F1 snapshots for $(date -u +%F)"
+          git commit -m "Update F1 snapshots and packs for $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
