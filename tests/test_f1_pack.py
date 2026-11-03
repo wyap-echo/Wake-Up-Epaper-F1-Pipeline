@@ -43,7 +43,7 @@ def sample_document() -> dict[str, object]:
                 "round": round_number,
                 "country": "Australia",
                 "race_name": "Australian Grand Prix",
-                "meeting_start_utc": "2026-03-06T00:00:00Z",
+                "meeting_start_utc": "2026-03-06",
                 "meeting_end_utc": "2026-03-08T23:59:59Z",
                 "race_start_epoch": 1772982000 + round_number,
                 "race_beijing": "03/08 12:00",

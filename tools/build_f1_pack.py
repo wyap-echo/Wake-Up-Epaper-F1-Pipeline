@@ -9,7 +9,7 @@ import json
 import struct
 import unicodedata
 import zlib
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -50,7 +50,10 @@ def parse_utc_epoch(value: Any) -> int:
         text = text[:-1] + "+00:00"
     parsed = datetime.fromisoformat(text)
     if parsed.tzinfo is None:
-        fail(f"UTC timestamp has no timezone: {value!r}")
+        if len(text) == 10:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        else:
+            fail(f"UTC timestamp has no timezone: {value!r}")
     return int(parsed.timestamp())
 
 
