@@ -1,0 +1,113 @@
+name: F1 data extraction
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f1-repository-writer
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Determine seasons
+        id: seasons
+        shell: bash
+        run: |
+          current="$(date -u +%Y)"
+          next="$((current + 1))"
+          echo "current=${current}" >> "$GITHUB_OUTPUT"
+          echo "next=${next}" >> "$GITHUB_OUTPUT"
+          echo "Current season: ${current}; next season: ${next}"
+
+      - name: Run parser tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Collect current season
+        shell: bash
+        run: |
+          python tools/f1_collector.py \
+            --year "${{ steps.seasons.outputs.current }}" \
+            --output artifacts/current \
+            --cache-dir .cache/current \
+            --refresh \
+            --delay 0.35
+
+      - name: Collect next season when published
+        id: next
+        shell: bash
+        run: |
+          set +e
+          python tools/f1_collector.py \
+            --year "${{ steps.seasons.outputs.next }}" \
+            --output artifacts/next \
+            --cache-dir .cache/next \
+            --refresh \
+            --delay 0.35
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Next-season collection was skipped (exit ${code})."
+          fi
+
+      - name: Publish stable current snapshot
+        run: |
+          python tools/f1_snapshot.py \
+            artifacts/current/season.json \
+            "data/f1-${{ steps.seasons.outputs.current }}.json" \
+            --expected-year "${{ steps.seasons.outputs.current }}"
+
+      - name: Publish stable next snapshot
+        if: steps.next.outputs.available == 'true'
+        run: |
+          python tools/f1_snapshot.py \
+            artifacts/next/season.json \
+            "data/f1-${{ steps.seasons.outputs.next }}.json" \
+            --expected-year "${{ steps.seasons.outputs.next }}"
+
+      - name: Upload complete extraction
+        uses: actions/upload-artifact@v4
+        with:
+          name: f1-extraction-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit changed snapshots
+        shell: bash
+        run: |
+          if git diff --quiet -- data; then
+            echo "No meaningful F1 data changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "Update F1 snapshots for $(date -u +%F)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
