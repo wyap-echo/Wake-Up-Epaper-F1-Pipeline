@@ -100,13 +100,13 @@ jobs:
       - name: Commit changed snapshots
         shell: bash
         run: |
-          if git diff --quiet -- data; then
+          git add data
+          if git diff --cached --quiet -- data; then
             echo "No meaningful F1 data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
           git commit -m "Update F1 snapshots for $(date -u +%F)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
