@@ -5,10 +5,10 @@
     "year": 2026,
     "file": "f1-2026.f1p",
     "size": 8450,
-    "sha256": "12726a00cfb7cbb6c689422c0a003292951b877d47e758c87a050fcdd83424d6",
+    "sha256": "9837ce9d309efbfc37694082f29d681cf31ee4e5be16565e842d82a01cd16c39",
     "records": 23,
     "has_podium": true,
-    "generated_utc": 1793694323
+    "generated_utc": 1794051827
   },
   "next": {
     "role": "next",
@@ -20,5 +20,5 @@
     "has_podium": false,
     "generated_utc": 1793694324
   },
-  "published_at": "2026-11-03T08:25:24Z"
+  "published_at": "2026-11-07T11:43:47Z"
 }

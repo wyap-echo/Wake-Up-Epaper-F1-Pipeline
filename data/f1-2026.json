@@ -2,7 +2,7 @@
   "schema": "wake-epaper-f1-snapshot/1",
   "season": 2026,
   "source_url": "https://www.formula1.com/en/racing/2026",
-  "source_page_sha256": "4b74ff5448d17a9918f0c4f1e20d530087712b9c897c2071a855091bfefdbb03",
+  "source_page_sha256": "0a4c02cb45c66fcad33981942efe69956a1cdfb9384b34fd37d00b419a4fe204",
   "race_count": 23,
   "podium_count": 19,
   "races": [
@@ -903,8 +903,8 @@
       "round": 20,
       "country": "Brazil",
       "race_name": "São Paulo Grand Prix",
-      "meeting_start_utc": "2026-11-06T00:00:00.000Z",
-      "meeting_end_utc": "2026-11-08T23:59:59.999Z",
+      "meeting_start_utc": "2026-11-06",
+      "meeting_end_utc": "2026-11-08",
       "timezone": "America/Sao_Paulo",
       "gmt_offset": "-03:00",
       "race_start_epoch": 1794157200,
@@ -1012,5 +1012,5 @@
       "source_url": "https://www.formula1.com/en/racing/2026/united-arab-emirates"
     }
   ],
-  "published_at": "2026-11-03T08:25:23Z"
+  "published_at": "2026-11-07T11:43:47Z"
 }
