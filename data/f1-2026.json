@@ -2,9 +2,9 @@
   "schema": "wake-epaper-f1-snapshot/1",
   "season": 2026,
   "source_url": "https://www.formula1.com/en/racing/2026",
-  "source_page_sha256": "0a4c02cb45c66fcad33981942efe69956a1cdfb9384b34fd37d00b419a4fe204",
+  "source_page_sha256": "ff0e4ebf757c0003232738ba82c8585f7d306a55eb11a92369a608ccac45bd2a",
   "race_count": 23,
-  "podium_count": 19,
+  "podium_count": 20,
   "races": [
     {
       "round": 1,
@@ -923,8 +923,27 @@
         "fastest_lap_team": "Mercedes AMG Petronas Motorsport",
         "direction": "Anti-Clockwise"
       },
-      "podium": null,
-      "winner_time": "",
+      "podium": [
+        {
+          "position": 1,
+          "name": "Norris",
+          "code": "NOR",
+          "result": "1:35:23.504"
+        },
+        {
+          "position": 2,
+          "name": "Verstappen",
+          "code": "VER",
+          "result": "+14.602"
+        },
+        {
+          "position": 3,
+          "name": "Hadjar",
+          "code": "HAD",
+          "result": "+24.485"
+        }
+      ],
+      "winner_time": "1:35:23.504",
       "source_url": "https://www.formula1.com/en/racing/2026/brazil"
     },
     {
@@ -1012,5 +1031,5 @@
       "source_url": "https://www.formula1.com/en/racing/2026/united-arab-emirates"
     }
   ],
-  "published_at": "2026-11-07T11:43:47Z"
+  "published_at": "2026-11-09T13:53:05Z"
 }
