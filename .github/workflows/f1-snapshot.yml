@@ -1,17 +1,14 @@
-name: F1 data extraction
+name: F1 session watcher
 
 on:
   schedule:
-    # Friday-Sunday at 09:17, 15:17 and 21:17 Beijing time.
-    - cron: "17 1,7,13 * * 5,6,0"
-    # Monday final catch-up at 13:17 Beijing time.
-    - cron: "17 5 * * 1"
-    # Next-season calendar refresh on the first day of each month at 13:17.
-    - cron: "17 5 1 * *"
+    # The workflow checks hourly, but only contacts Formula 1 after a session
+    # enters its result window.
+    - cron: "17 * * * *"
   workflow_dispatch:
     inputs:
-      collect_next:
-        description: "Also refresh the next-season calendar"
+      force_current:
+        description: "Force current-season collection outside a session window"
         required: false
         type: boolean
         default: false
@@ -29,7 +26,7 @@ env:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
       - name: Check out repository
@@ -42,78 +39,64 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Determine seasons
+      - name: Determine current season
         id: seasons
         shell: bash
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          EVENT_SCHEDULE: ${{ github.event.schedule }}
-          MANUAL_COLLECT_NEXT: ${{ inputs.collect_next }}
         run: |
           current="$(TZ=Asia/Shanghai date +%Y)"
           next="$((current + 1))"
-          collect_next=false
-          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$MANUAL_COLLECT_NEXT" == "true" ]]; then
-            collect_next=true
-          fi
-          if [[ "$EVENT_SCHEDULE" == "17 5 1 * *" ]]; then
-            collect_next=true
-          fi
           echo "current=${current}" >> "$GITHUB_OUTPUT"
           echo "next=${next}" >> "$GITHUB_OUTPUT"
-          echo "collect_next=${collect_next}" >> "$GITHUB_OUTPUT"
-          echo "Current season: ${current}; next season: ${next}; collect_next=${collect_next}"
+          echo "Current season: ${current}; next season: ${next}"
 
       - name: Run parser tests
         run: python -m unittest discover -s tests -v
 
-      - name: Collect current season
+      - name: Check current session window
+        id: gate
+        shell: bash
+        env:
+          FORCE_CURRENT: ${{ inputs.force_current }}
+        run: |
+          snapshot="data/f1-${{ steps.seasons.outputs.current }}.json"
+          if [[ ! -f "$snapshot" ]]; then
+            echo "should_collect=true" >> "$GITHUB_OUTPUT"
+            echo "reason=bootstrap-snapshot" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          args=(
+            "$snapshot"
+            --now-epoch "$(date -u +%s)"
+            --delay-minutes 15
+            --grace-hours 6
+          )
+          if [[ "${FORCE_CURRENT}" == "true" ]]; then
+            args+=(--force)
+          fi
+          python tools/collection_window.py "${args[@]}"
+
+      - name: Collect current season and complete results
+        if: steps.gate.outputs.should_collect == 'true'
         shell: bash
         run: |
           python tools/f1_collector.py \
             --year "${{ steps.seasons.outputs.current }}" \
             --output artifacts/current \
             --cache-dir .cache/current \
+            --existing "data/f1-${{ steps.seasons.outputs.current }}.json" \
             --refresh \
-            --delay 0.35
-
-      - name: Collect next season when published
-        id: next
-        if: steps.seasons.outputs.collect_next == 'true'
-        shell: bash
-        run: |
-          set +e
-          python tools/f1_collector.py \
-            --year "${{ steps.seasons.outputs.next }}" \
-            --output artifacts/next \
-            --cache-dir .cache/next \
-            --refresh \
-            --delay 0.35
-          code=$?
-          set -e
-          if [ "$code" -eq 0 ]; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Next-season collection was skipped (exit ${code})."
-          fi
+            --delay 0.2
 
       - name: Publish stable current snapshot
+        if: steps.gate.outputs.should_collect == 'true'
         run: |
           python tools/f1_snapshot.py \
             artifacts/current/season.json \
             "data/f1-${{ steps.seasons.outputs.current }}.json" \
             --expected-year "${{ steps.seasons.outputs.current }}"
 
-      - name: Publish stable next snapshot
-        if: steps.next.outputs.available == 'true'
-        run: |
-          python tools/f1_snapshot.py \
-            artifacts/next/season.json \
-            "data/f1-${{ steps.seasons.outputs.next }}.json" \
-            --expected-year "${{ steps.seasons.outputs.next }}"
-
       - name: Build compact current pack
+        if: steps.gate.outputs.should_collect == 'true'
         shell: bash
         run: |
           mkdir -p dist
@@ -122,24 +105,20 @@ jobs:
             "dist/f1-${{ steps.seasons.outputs.current }}.f1p" \
             --expected-year "${{ steps.seasons.outputs.current }}"
 
-      - name: Build compact next pack
-        if: steps.next.outputs.available == 'true'
-        shell: bash
-        run: |
-          python tools/build_f1_pack.py \
-            "data/f1-${{ steps.seasons.outputs.next }}.json" \
-            "dist/f1-${{ steps.seasons.outputs.next }}.f1p" \
-            --expected-year "${{ steps.seasons.outputs.next }}"
-
       - name: Build device manifest
+        if: steps.gate.outputs.should_collect == 'true'
         shell: bash
         run: |
-          python tools/build_manifest.py \
-            --current "dist/f1-${{ steps.seasons.outputs.current }}.f1p" \
-            --next "dist/f1-${{ steps.seasons.outputs.next }}.f1p" \
-            --output dist/f1-manifest.json
+          current="dist/f1-${{ steps.seasons.outputs.current }}.f1p"
+          next="dist/f1-${{ steps.seasons.outputs.next }}.f1p"
+          args=(--current "$current" --output dist/f1-manifest.json)
+          if [[ -f "$next" ]]; then
+            args+=(--next "$next")
+          fi
+          python tools/build_manifest.py "${args[@]}"
 
       - name: Upload complete extraction
+        if: steps.gate.outputs.should_collect == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: f1-extraction-${{ github.run_id }}
@@ -150,6 +129,7 @@ jobs:
           retention-days: 30
 
       - name: Commit changed snapshots and packs
+        if: steps.gate.outputs.should_collect == 'true'
         shell: bash
         run: |
           git add data dist
@@ -159,7 +139,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Update F1 snapshots and packs for $(date -u +%F)"
+          git commit -m "Update F1 data after session $(date -u +%FT%TZ)"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           git push origin "HEAD:${GITHUB_REF_NAME}"
-

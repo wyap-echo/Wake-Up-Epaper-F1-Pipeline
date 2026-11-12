@@ -6,6 +6,7 @@ from __future__ import annotations
 import sys
 import unittest
 import zlib
+import json
 from pathlib import Path
 
 TEST_DIR = Path(__file__).resolve().parent
@@ -60,10 +61,35 @@ def sample_document() -> dict[str, object]:
                     "fastest_lap_year": "2024",
                 },
                 "podium": podium,
+                "sessions": [
+                    {
+                        "code": "r",
+                        "end_utc": "2026-03-08T07:00:00Z",
+                    }
+                ],
+                "results": {
+                    "r": {
+                        "name": "Race",
+                        "entries": [
+                            {
+                                "position": 1,
+                                "number": "63",
+                                "name": "George Russell",
+                                "code": "RUS",
+                                "team": "Mercedes",
+                                "time": "1:23:06.801",
+                                "laps": "58",
+                                "points": "25",
+                            }
+                        ],
+                    }
+                }
+                if round_number == 1
+                else {},
             }
         )
     return {
-        "schema": "wake-epaper-f1-snapshot/1",
+        "schema": "wake-epaper-f1-snapshot/2",
         "season": 2026,
         "race_count": len(races),
         "podium_count": 1,
@@ -77,13 +103,14 @@ class F1PackTests(unittest.TestCase):
         pack = build_f1_pack.build_pack(sample_document(), 2026)
         values = build_f1_pack.HEADER.unpack_from(pack)
         self.assertEqual(values[0], b"F1P2")
-        self.assertEqual(values[1], 2)
+        self.assertEqual(values[1], 3)
         self.assertEqual(values[2], build_f1_pack.HEADER.size)
         self.assertEqual(values[3], 2026)
         self.assertEqual(values[4], 20)
         self.assertEqual(values[5], build_f1_pack.RACE_RECORD.size)
         payload = pack[build_f1_pack.HEADER.size :]
         self.assertEqual(zlib.crc32(payload) & 0xFFFFFFFF, values[8])
+        self.assertGreater(values[10], 0)
 
     def test_first_record_contains_podium(self) -> None:
         pack = build_f1_pack.build_pack(sample_document(), 2026)
@@ -96,6 +123,19 @@ class F1PackTests(unittest.TestCase):
         self.assertEqual(record[7].rstrip(b"\0"), b"Australia")
         self.assertEqual(record[-9].rstrip(b"\0"), b"RUS")
         self.assertEqual(record[-3].rstrip(b"\0"), b"LEC")
+
+    def test_full_results_are_compressed_after_records(self) -> None:
+        pack = build_f1_pack.build_pack(sample_document(), 2026)
+        values = build_f1_pack.HEADER.unpack_from(pack)
+        offset = (
+            values[2]
+            + values[4] * values[5]
+        )
+        document = json.loads(zlib.decompress(pack[offset:]))
+        self.assertEqual(document["schema"], "wake-epaper-f1-results/1")
+        self.assertEqual(document["season"], 2026)
+        entry = document["races"][0]["sessions"][0]["entries"][0]
+        self.assertEqual(entry[3], "George Russell")
 
 
 if __name__ == "__main__":

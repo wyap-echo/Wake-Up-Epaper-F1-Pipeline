@@ -45,6 +45,28 @@ UPCOMING_CARD = """
 </a>
 """
 
+RESULT_TABLE = """
+<table>
+  <thead><tr>
+    <th>Pos.</th><th>No.</th><th>Driver</th><th>Team</th>
+    <th>Time / Gap</th><th>Laps</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>1</td><td>16</td><td>Charles Leclerc LEC</td>
+      <td>Ferrari</td><td>1:18.128</td><td>29</td></tr>
+    <tr><td>2</td><td>12</td><td>Kimi Antonelli ANT</td>
+      <td>Mercedes</td><td>+0.659s</td><td>30</td></tr>
+  </tbody>
+</table>
+"""
+
+RACE_PAGE = (
+    r'\"text\":\"Practice 1\",\"value\":\"practice?meeting=1300'
+    r'\u0026session=1\",\"isSessionResult\":true,\"isAvailable\":true'
+    r'<a href="/en/results/2026/races/1300/las-vegas/practice/1">'
+    r'<a href="/en/results/2026/races/1300/las-vegas/race-result">'
+)
+
 
 class F1CollectorTests(unittest.TestCase):
     def test_parse_completed_podium(self) -> None:
@@ -80,6 +102,29 @@ class F1CollectorTests(unittest.TestCase):
         self.assertEqual(cards[0].country, "Australia")
         self.assertEqual(cards[0].track_name, "Melbourne")
         self.assertIsNotNone(cards[0].podium)
+
+    def test_parse_complete_result_table(self) -> None:
+        headers, entries = f1_collector.parse_results_table(RESULT_TABLE)
+        self.assertEqual(headers[0], "Pos.")
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0]["position"], 1)
+        self.assertEqual(entries[0]["name"], "Charles Leclerc")
+        self.assertEqual(entries[0]["code"], "LEC")
+        self.assertEqual(entries[0]["time"], "1:18.128")
+
+    def test_result_availability_and_urls(self) -> None:
+        urls, availability = f1_collector.result_page_urls(
+            RACE_PAGE,
+            2026,
+            "las-vegas",
+        )
+        self.assertTrue(availability["p1"])
+        self.assertEqual(
+            urls["p1"],
+            "https://www.formula1.com/en/results/2026/races/"
+            "1300/las-vegas/practice/1",
+        )
+        self.assertEqual(f1_collector.result_session_code("race?meeting=1"), "r")
 
 
 if __name__ == "__main__":

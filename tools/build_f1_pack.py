@@ -15,8 +15,9 @@ from typing import Any
 
 
 MAGIC = b"F1P2"
-PACK_VERSION = 2
+PACK_VERSION = 3
 FLAG_HAS_PODIUM = 1 << 0
+FLAG_HAS_FULL_RESULTS = 1 << 1
 
 HEADER = struct.Struct("<4sHHHHHHIIII")
 RACE_RECORD = struct.Struct(
@@ -58,7 +59,10 @@ def parse_utc_epoch(value: Any) -> int:
 
 
 def build_pack(document: dict[str, Any], expected_year: int) -> bytes:
-    if document.get("schema") != "wake-epaper-f1-snapshot/1":
+    if document.get("schema") not in {
+        "wake-epaper-f1-snapshot/1",
+        "wake-epaper-f1-snapshot/2",
+    }:
         fail(f"unsupported snapshot schema: {document.get('schema')!r}")
     if int(document.get("season", -1)) != expected_year:
         fail(
@@ -119,6 +123,60 @@ def build_pack(document: dict[str, Any], expected_year: int) -> bytes:
         )
 
     payload = b"".join(records)
+    results_races: list[dict[str, Any]] = []
+    for race in sorted(races, key=lambda item: int(item["round"])):
+        session_results: list[dict[str, Any]] = []
+        for code, result in sorted(race.get("results", {}).items()):
+            entries = result.get("entries", [])
+            if not entries:
+                continue
+            session_results.append(
+                {
+                    "code": code,
+                    "name": str(result.get("name", "")),
+                    "end_epoch": parse_utc_epoch(
+                        next(
+                            (
+                                session.get("end_utc")
+                                for session in race.get("sessions", [])
+                                if session.get("code") == code
+                            ),
+                            "",
+                        )
+                    ),
+                    "entries": [
+                        [
+                            entry.get("position"),
+                            str(entry.get("number", "")),
+                            entry.get("code", ""),
+                            entry.get("name", ""),
+                            entry.get("team", ""),
+                            entry.get("time", ""),
+                            entry.get("laps", ""),
+                            entry.get("points", ""),
+                        ]
+                        for entry in entries
+                    ],
+                }
+            )
+        if session_results:
+            results_races.append(
+                {"round": int(race["round"]), "sessions": session_results}
+            )
+    results_document = {
+        "schema": "wake-epaper-f1-results/1",
+        "season": expected_year,
+        "races": results_races,
+    }
+    results_blob = zlib.compress(
+        json.dumps(
+            results_document,
+            ensure_ascii=True,
+            separators=(",", ":"),
+        ).encode("ascii"),
+        9,
+    )
+    all_payload = payload + results_blob
     published = str(document.get("published_at", ""))
     generated = parse_utc_epoch(published)
     header = HEADER.pack(
@@ -128,13 +186,14 @@ def build_pack(document: dict[str, Any], expected_year: int) -> bytes:
         expected_year,
         len(records),
         RACE_RECORD.size,
-        1 if podium_count else 0,
+        (FLAG_HAS_PODIUM if podium_count else 0)
+        | (FLAG_HAS_FULL_RESULTS if results_races else 0),
         len(payload),
-        zlib.crc32(payload) & 0xFFFFFFFF,
+        zlib.crc32(all_payload) & 0xFFFFFFFF,
         generated,
-        0,
+        len(results_blob),
     )
-    pack = header + payload
+    pack = header + all_payload
     return pack
 
 

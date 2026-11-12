@@ -35,6 +35,15 @@ USER_AGENT = (
     "Chrome/141.0 Safari/537.36 WakeUpEpaper-F1Collector/1.0"
 )
 BEIJING = timezone(timedelta(hours=8), name="Asia/Shanghai")
+SESSION_DURATIONS = {
+    "p1": 60 * 60,
+    "p2": 60 * 60,
+    "p3": 60 * 60,
+    "sq": 45 * 60,
+    "s": 60 * 60,
+    "q": 60 * 60,
+    "r": 120 * 60,
+}
 
 
 @dataclass
@@ -65,6 +74,252 @@ def sha256_bytes(data: bytes) -> str:
 def clean_text(value: str) -> str:
     value = re.sub(r"<[^>]+>", " ", value)
     return " ".join(html_lib.unescape(value).split())
+
+
+def header_key(value: str) -> str:
+    aliases = {
+        "pos.": "position",
+        "no.": "number",
+        "driver": "driver",
+        "team": "team",
+        "time / gap": "time",
+        "time / retired": "time",
+        "laps": "laps",
+        "pts.": "points",
+        "grand prix": "grand_prix",
+        "date": "date",
+        "winner": "driver",
+    }
+    normalized = clean_text(value).lower()
+    return aliases.get(normalized, safe_slug(normalized).replace("-", "_"))
+
+
+def parse_html_table(
+    page_html: str,
+    required_headers: set[str],
+) -> tuple[list[str], list[dict[str, str]]]:
+    for table_html in re.findall(r"<table[\s\S]*?</table>", page_html):
+        header_cells = [
+            clean_text(value)
+            for value in re.findall(
+                r"<th[^>]*>([\s\S]*?)</th>",
+                table_html,
+                flags=re.I,
+            )
+        ]
+        if not required_headers.issubset(set(header_cells)):
+            continue
+        body_match = re.search(
+            r"<tbody[^>]*>([\s\S]*?)</tbody>",
+            table_html,
+            flags=re.I,
+        )
+        if not body_match:
+            continue
+        entries: list[dict[str, str]] = []
+        for row_html in re.findall(
+            r"<tr[^>]*>([\s\S]*?)</tr>",
+            body_match.group(1),
+            flags=re.I,
+        ):
+            cells = [
+                clean_text(value)
+                for value in re.findall(
+                    r"<td[^>]*>([\s\S]*?)</td>",
+                    row_html,
+                    flags=re.I,
+                )
+            ]
+            if len(cells) != len(header_cells):
+                continue
+            entries.append(
+                {
+                    header_key(header): value
+                    for header, value in zip(header_cells, cells)
+                }
+            )
+        return header_cells, entries
+    return [], []
+
+
+def split_driver(value: str) -> tuple[str, str]:
+    text = clean_text(value)
+    match = re.search(r"\b([A-Z0-9]{3})\b\s*$", text)
+    if not match:
+        return text, ""
+    return text[: match.start()].strip(), match.group(1)
+
+
+def parse_results_table(
+    page_html: str,
+    required_headers: set[str] | None = None,
+) -> tuple[list[str], list[dict[str, Any]]]:
+    headers, raw_entries = parse_html_table(
+        page_html,
+        required_headers or {"Pos.", "Driver"},
+    )
+    entries: list[dict[str, Any]] = []
+    for raw in raw_entries:
+        entry: dict[str, Any] = dict(raw)
+        if "driver" in entry and "code" not in entry:
+            name, code = split_driver(entry["driver"])
+            entry["name"] = name
+            entry["code"] = code
+        if "position" in entry:
+            position = entry["position"].strip()
+            entry["position"] = int(position) if position.isdigit() else position
+        entries.append(entry)
+    return headers, entries
+
+
+def result_session_code(value: str) -> str:
+    normalized = html_lib.unescape(value).lower()
+    practice = re.search(
+        r"(?:/practice/|practice\?[^#]*session=)(\d+)",
+        normalized,
+    )
+    if practice:
+        return f"p{practice.group(1)}"
+    if "sprint-qualifying" in normalized or "sprint-shootout" in normalized:
+        return "sq"
+    if "/sprint-results" in normalized or re.search(
+        r"(?:/sprint(?:/|$)|^sprint\\?)",
+        normalized,
+    ):
+        return "s"
+    if "qualifying" in normalized:
+        return "q"
+    if "race-result" in normalized or normalized.startswith("race?"):
+        return "r"
+    return ""
+
+
+def result_page_urls(
+    race_html: str,
+    year: int,
+    slug: str,
+) -> tuple[dict[str, str], dict[str, bool]]:
+    urls: dict[str, str] = {}
+    for path in re.findall(
+        rf"/en/results/{year}/races/[^\"\\\s]+",
+        race_html,
+    ):
+        code = result_session_code(path)
+        if code:
+            urls.setdefault(code, BASE_URL + path)
+
+    availability: dict[str, bool] = {}
+    patterns = (
+        r'\\"text\\":\\"([^"]+)\\",\\"value\\":\\"([^"]+)\\",'
+        r'\\"isSessionResult\\":true,\\"isAvailable\\":(true|false)',
+        r'"text":"([^"]+)","value":"([^"]+)",'
+        r'"isSessionResult":true,"isAvailable":(true|false)',
+    )
+    for pattern in patterns:
+        for match in re.finditer(pattern, race_html):
+            value = html_lib.unescape(match.group(2))
+            code = result_session_code(value)
+            if code:
+                availability[code] = (
+                    availability.get(code, False)
+                    or match.group(3).lower() == "true"
+                )
+    return urls, availability
+
+
+def collect_meeting_results(
+    race_html: str,
+    race: dict[str, Any],
+    downloader: Downloader,
+    year: int,
+    previous: dict[str, Any] | None = None,
+) -> None:
+    urls, availability = result_page_urls(
+        race_html,
+        year,
+        str(race["slug"]),
+    )
+    previous_results = (
+        previous.get("results", {})
+        if isinstance(previous, dict)
+        and isinstance(previous.get("results"), dict)
+        else {}
+    )
+    previous_sessions = (
+        {
+            str(session.get("code", "")): session
+            for session in previous.get("sessions", [])
+            if isinstance(session, dict)
+        }
+        if isinstance(previous, dict)
+        and isinstance(previous.get("sessions"), list)
+        else {}
+    )
+    results: dict[str, Any] = {
+        str(code): result
+        for code, result in previous_results.items()
+        if isinstance(result, dict) and result.get("entries")
+    }
+    for session in race.get("sessions", []):
+        code = str(session.get("code", ""))
+        session["result_available"] = bool(availability.get(code, False))
+        session["result_url"] = urls.get(code, "")
+        session["result_count"] = 0
+        session["result_complete"] = False
+        previous_session = previous_sessions.get(code, {})
+        previous_result = results.get(code)
+        if previous_result and previous_session.get("result_complete"):
+            session["result_available"] = bool(
+                previous_session.get("result_available", True)
+            )
+            session["result_url"] = str(
+                previous_session.get("result_url", session["result_url"])
+            )
+            session["result_count"] = int(
+                previous_session.get("result_count", len(previous_result["entries"]))
+            )
+            session["result_complete"] = True
+            continue
+        if not session["result_available"] or not session["result_url"]:
+            continue
+        path = session["result_url"].split(f"/results/{year}/races/", 1)[-1]
+        page = downloader.get(
+            session["result_url"],
+            Path("results") / year.__str__() / f"{path}.html",
+        )
+        headers, entries = parse_results_table(
+            page.decode("utf-8", errors="replace")
+        )
+        if not entries:
+            continue
+        results[code] = {
+            "name": str(session.get("name", "")),
+            "url": session["result_url"],
+            "page_sha256": sha256_bytes(page),
+            "columns": headers,
+            "entries": entries,
+        }
+        session["result_count"] = len(entries)
+        session["result_complete"] = True
+
+    race["results"] = results
+    race_result = results.get("r")
+    if race_result and not race.get("podium"):
+        podium = []
+        for entry in race_result["entries"]:
+            position = entry.get("position")
+            if isinstance(position, int) and 1 <= position <= 3:
+                podium.append(
+                    {
+                        "position": position,
+                        "name": entry.get("name", ""),
+                        "code": entry.get("code", ""),
+                        "result": entry.get("time", ""),
+                    }
+                )
+        if len(podium) == 3:
+            race["podium"] = podium
+            race["winner_time"] = str(podium[0]["result"])
 
 
 def parse_podium(card_html: str) -> list[dict[str, Any]] | None:
@@ -314,10 +569,15 @@ def extract_meeting(race_html: str, card: RaceCard, year: int) -> dict[str, Any]
         start_utc = parse_iso(str(value["startDate"]))
         end_text = value.get("endDate")
         end_utc = parse_iso(str(end_text)) if end_text else None
+        code = session_code(name)
+        if end_utc is None:
+            end_utc = start_utc + timedelta(
+                seconds=SESSION_DURATIONS.get(code, 60 * 60)
+            )
         start_local = start_utc.astimezone(local_tz)
         sessions.append(
             {
-                "code": session_code(name),
+                "code": code,
                 "name": name.split(" - ", 1)[0],
                 "start_local": start_local.isoformat(),
                 "start_local_display": start_local.strftime("%m/%d %H:%M"),
@@ -328,6 +588,7 @@ def extract_meeting(race_html: str, card: RaceCard, year: int) -> dict[str, Any]
                     else ""
                 ),
                 "start_epoch": int(start_utc.timestamp()),
+                "end_epoch": int(end_utc.timestamp()),
                 "state": str(value.get("eventStatus", "")),
             }
         )
@@ -603,6 +864,16 @@ def parse_args() -> argparse.Namespace:
         type=int,
         help="Collect only one round. Useful for testing.",
     )
+    parser.add_argument(
+        "--skip-results",
+        action="store_true",
+        help="Collect calendar metadata without result pages.",
+    )
+    parser.add_argument(
+        "--existing",
+        type=Path,
+        help="Reuse complete session results from an existing snapshot.",
+    )
     return parser.parse_args()
 
 
@@ -626,6 +897,20 @@ def main() -> int:
     print(f"Season source: {season_url}")
     print(f"Output: {output_dir}")
 
+    existing_races: dict[int, dict[str, Any]] = {}
+    if args.existing and args.existing.exists():
+        try:
+            existing_document = json.loads(
+                args.existing.read_text(encoding="utf-8")
+            )
+            existing_races = {
+                int(race["round"]): race
+                for race in existing_document.get("races", [])
+                if isinstance(race, dict) and "round" in race
+            }
+        except (OSError, json.JSONDecodeError, TypeError, ValueError):
+            existing_races = {}
+
     season_bytes = downloader.get(
         season_url, Path("season") / f"{year}.html"
     )
@@ -639,6 +924,24 @@ def main() -> int:
                 f"Round {args.only_round} was not present on the season page"
             )
     print(f"Found {len(cards)} championship rounds.")
+
+    results_archive: dict[str, Any] | None = None
+    if not args.skip_results:
+        archive_url = f"{BASE_URL}/en/results/{year}/races"
+        archive_bytes = downloader.get(
+            archive_url,
+            Path("results") / str(year) / "races.html",
+        )
+        archive_headers, archive_entries = parse_results_table(
+            archive_bytes.decode("utf-8", errors="replace"),
+            {"Grand Prix", "Winner"},
+        )
+        results_archive = {
+            "url": archive_url,
+            "page_sha256": sha256_bytes(archive_bytes),
+            "columns": archive_headers,
+            "entries": archive_entries,
+        }
 
     races: list[dict[str, Any]] = []
     warnings: list[str] = []
@@ -655,6 +958,14 @@ def main() -> int:
             race_html = race_bytes.decode("utf-8", errors="replace")
             race = extract_meeting(race_html, card, year)
             race["page_sha256"] = sha256_bytes(race_bytes)
+            if not args.skip_results:
+                collect_meeting_results(
+                    race_html,
+                    race,
+                    downloader,
+                    year,
+                    existing_races.get(card.round),
+                )
             map_asset, map_warning = download_map(
                 downloader, race, output_dir
             )
@@ -697,6 +1008,7 @@ def main() -> int:
         },
         "race_count": len(races),
         "races": races,
+        "results_archive": results_archive,
         "warnings": warnings,
     }
     season_json = json.dumps(pack, ensure_ascii=False, indent=2) + "\n"

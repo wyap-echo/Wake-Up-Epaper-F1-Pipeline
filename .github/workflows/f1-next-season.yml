@@ -1,0 +1,137 @@
+name: F1 next-season calendar
+
+on:
+  schedule:
+    # First day of each month at 13:17 Beijing time.
+    - cron: "17 5 1 * *"
+  workflow_dispatch:
+    inputs:
+      force_next:
+        description: "Force refresh even when the next calendar already exists"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f1-repository-writer
+  cancel-in-progress: false
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  collect-next:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Determine seasons
+        id: seasons
+        shell: bash
+        run: |
+          current="$(TZ=Asia/Shanghai date +%Y)"
+          next="$((current + 1))"
+          echo "current=${current}" >> "$GITHUB_OUTPUT"
+          echo "next=${next}" >> "$GITHUB_OUTPUT"
+
+      - name: Run parser tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Check existing next calendar
+        id: gate
+        shell: bash
+        env:
+          FORCE_NEXT: ${{ inputs.force_next }}
+        run: |
+          args=(
+            "data/f1-${{ steps.seasons.outputs.next }}.json"
+            --expected-year "${{ steps.seasons.outputs.next }}"
+          )
+          if [[ "${FORCE_NEXT}" == "true" ]]; then
+            args+=(--force)
+          fi
+          python tools/next_calendar.py "${args[@]}"
+
+      - name: Collect next season when absent
+        if: steps.gate.outputs.should_collect == 'true'
+        shell: bash
+        run: |
+          python tools/f1_collector.py \
+            --year "${{ steps.seasons.outputs.next }}" \
+            --output artifacts/next \
+            --cache-dir .cache/next \
+            --refresh \
+            --skip-results \
+            --delay 0.2
+
+      - name: Publish stable next snapshot
+        if: steps.gate.outputs.should_collect == 'true'
+        run: |
+          python tools/f1_snapshot.py \
+            artifacts/next/season.json \
+            "data/f1-${{ steps.seasons.outputs.next }}.json" \
+            --expected-year "${{ steps.seasons.outputs.next }}"
+
+      - name: Build compact next pack
+        if: steps.gate.outputs.should_collect == 'true'
+        shell: bash
+        run: |
+          mkdir -p dist
+          python tools/build_f1_pack.py \
+            "data/f1-${{ steps.seasons.outputs.next }}.json" \
+            "dist/f1-${{ steps.seasons.outputs.next }}.f1p" \
+            --expected-year "${{ steps.seasons.outputs.next }}"
+
+      - name: Refresh manifest when both packs exist
+        if: steps.gate.outputs.should_collect == 'true'
+        shell: bash
+        run: |
+          current="dist/f1-${{ steps.seasons.outputs.current }}.f1p"
+          next="dist/f1-${{ steps.seasons.outputs.next }}.f1p"
+          if [[ -f "$current" && -f "$next" ]]; then
+            python tools/build_manifest.py \
+              --current "$current" \
+              --next "$next" \
+              --output dist/f1-manifest.json
+          else
+            echo "Current-season pack is not available; manifest unchanged."
+          fi
+
+      - name: Upload next-season extraction
+        if: steps.gate.outputs.should_collect == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: f1-next-${{ github.run_id }}
+          path: |
+            artifacts/next/
+            dist/f1-${{ steps.seasons.outputs.next }}.f1p
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit next calendar
+        if: steps.gate.outputs.should_collect == 'true'
+        shell: bash
+        run: |
+          git add data dist
+          if git diff --cached --quiet -- data dist; then
+            echo "No meaningful next-season changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update F1 ${{ steps.seasons.outputs.next }} calendar"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
