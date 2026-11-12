@@ -1,6 +1,6 @@
 # Wake-Up E-paper F1 Pipeline
 
-Private test repository for collecting Formula 1 schedule, race metadata, and
+Public data pipeline for collecting Formula 1 schedule, race metadata, and
 completed podium results from the official Formula 1 website.
 
 The repository does not contain or require a firmware API key. GitHub Actions
@@ -50,13 +50,23 @@ pack. It is built only from validated stable snapshots.
 
 ### F1 data extraction
 
-`.github/workflows/f1-snapshot.yml` runs daily and can also be started manually.
-It:
+`.github/workflows/f1-snapshot.yml` uses a race-aware schedule:
+
+- Friday through Sunday at 09:17, 15:17, and 21:17 Beijing time, when practice,
+  qualifying, and race information can change.
+- Monday at 13:17 Beijing time for a final result catch-up.
+- The first day of each month at 13:17 Beijing time for the next-season
+  calendar.
+
+Manual runs refresh the current season by default. Enable `collect_next` to
+also refresh the next-season calendar.
+
+The workflow:
 
 1. Runs parser unit tests.
 2. Refreshes the current official season page and every race page.
-3. Attempts to refresh the next-season page without failing early in the year
-   when that page is not published.
+3. Refreshes the next-season page only on the monthly schedule or when
+   explicitly requested in a manual run.
 4. Validates rounds, countries, race times, and podium records.
 5. Uploads the complete extraction as a workflow artifact.
 6. Commits stable snapshots only when meaningful content changes.
@@ -85,6 +95,5 @@ python tools/f1_snapshot.py `
 ## Source and licensing
 
 Data is normalized from official Formula 1 web pages. Circuit images and F1
-marks may have separate licensing restrictions. This repository is private and
-is intended for pipeline reliability testing.
+marks may have separate licensing restrictions.
 

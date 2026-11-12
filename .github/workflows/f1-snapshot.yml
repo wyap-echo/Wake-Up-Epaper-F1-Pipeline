@@ -2,8 +2,19 @@ name: F1 data extraction
 
 on:
   schedule:
-    - cron: "17 5 * * *"
+    # Friday-Sunday at 09:17, 15:17 and 21:17 Beijing time.
+    - cron: "17 1,7,13 * * 5,6,0"
+    # Monday final catch-up at 13:17 Beijing time.
+    - cron: "17 5 * * 1"
+    # Next-season calendar refresh on the first day of each month at 13:17.
+    - cron: "17 5 1 * *"
   workflow_dispatch:
+    inputs:
+      collect_next:
+        description: "Also refresh the next-season calendar"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -34,12 +45,24 @@ jobs:
       - name: Determine seasons
         id: seasons
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SCHEDULE: ${{ github.event.schedule }}
+          MANUAL_COLLECT_NEXT: ${{ inputs.collect_next }}
         run: |
-          current="$(date -u +%Y)"
+          current="$(TZ=Asia/Shanghai date +%Y)"
           next="$((current + 1))"
+          collect_next=false
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$MANUAL_COLLECT_NEXT" == "true" ]]; then
+            collect_next=true
+          fi
+          if [[ "$EVENT_SCHEDULE" == "17 5 1 * *" ]]; then
+            collect_next=true
+          fi
           echo "current=${current}" >> "$GITHUB_OUTPUT"
           echo "next=${next}" >> "$GITHUB_OUTPUT"
-          echo "Current season: ${current}; next season: ${next}"
+          echo "collect_next=${collect_next}" >> "$GITHUB_OUTPUT"
+          echo "Current season: ${current}; next season: ${next}; collect_next=${collect_next}"
 
       - name: Run parser tests
         run: python -m unittest discover -s tests -v
@@ -56,6 +79,7 @@ jobs:
 
       - name: Collect next season when published
         id: next
+        if: steps.seasons.outputs.collect_next == 'true'
         shell: bash
         run: |
           set +e
@@ -108,7 +132,6 @@ jobs:
             --expected-year "${{ steps.seasons.outputs.next }}"
 
       - name: Build device manifest
-        if: steps.next.outputs.available == 'true'
         shell: bash
         run: |
           python tools/build_manifest.py \
