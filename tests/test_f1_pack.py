@@ -65,6 +65,7 @@ def sample_document() -> dict[str, object]:
                     {
                         "code": "r",
                         "end_utc": "2026-03-08T07:00:00Z",
+                        "result_complete": True,
                     }
                 ],
                 "results": {

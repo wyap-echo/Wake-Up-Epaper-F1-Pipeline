@@ -44,6 +44,7 @@ SESSION_DURATIONS = {
     "q": 60 * 60,
     "r": 120 * 60,
 }
+MIN_RESULT_ENTRIES = 16
 
 
 @dataclass
@@ -300,7 +301,7 @@ def collect_meeting_results(
             "entries": entries,
         }
         session["result_count"] = len(entries)
-        session["result_complete"] = True
+        session["result_complete"] = len(entries) >= MIN_RESULT_ENTRIES
 
     race["results"] = results
     race_result = results.get("r")

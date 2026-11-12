@@ -126,7 +126,14 @@ def build_pack(document: dict[str, Any], expected_year: int) -> bytes:
     results_races: list[dict[str, Any]] = []
     for race in sorted(races, key=lambda item: int(item["round"])):
         session_results: list[dict[str, Any]] = []
+        complete_sessions = {
+            str(session.get("code", ""))
+            for session in race.get("sessions", [])
+            if session.get("result_complete")
+        }
         for code, result in sorted(race.get("results", {}).items()):
+            if code not in complete_sessions:
+                continue
             entries = result.get("entries", [])
             if not entries:
                 continue
