@@ -2,7 +2,7 @@
   "schema": "wake-epaper-f1-snapshot/2",
   "season": 2026,
   "source_url": "https://www.formula1.com/en/racing/2026",
-  "source_page_sha256": "41b42fd83d01e577759c943e93799318409c059f617862a862845f0129e7d103",
+  "source_page_sha256": "55a399d2fa8f92c61c8518460b1f6ed8d504e13172c57efa703788e54b9cb3ec",
   "race_count": 23,
   "podium_count": 20,
   "session_count": 115,
@@ -10,7 +10,7 @@
   "result_entry_count": 2186,
   "results_archive": {
     "url": "https://www.formula1.com/en/results/2026/races",
-    "page_sha256": "4fda2ef6b212adf9f3ead92df94dbcb98b4f55c744bbd1db3fe4b2f008a02eda",
+    "page_sha256": "10a26a5b061880963f4560db12fffb200b7b6a72b5f7ffdd4f7641e84dbaea6e",
     "columns": [
       "Grand Prix",
       "Date",
@@ -28189,5 +28189,5 @@
       "source_url": "https://www.formula1.com/en/racing/2026/united-arab-emirates"
     }
   ],
-  "published_at": "2026-11-12T16:43:24Z"
+  "published_at": "2026-11-20T02:24:46Z"
 }
