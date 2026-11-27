@@ -2,15 +2,15 @@
   "schema": "wake-epaper-f1-snapshot/2",
   "season": 2026,
   "source_url": "https://www.formula1.com/en/racing/2026",
-  "source_page_sha256": "0a4f87ee8051b351ba02eacd859a77d9c7a0b1f4c42d814f6653468541bf79d5",
+  "source_page_sha256": "a2fad1a167c3cecf5f57a6f1097a3f3d3fd3b8e8d988e32ee9f6db751cf7b66f",
   "race_count": 23,
   "podium_count": 21,
   "session_count": 115,
-  "completed_session_count": 104,
-  "result_entry_count": 2274,
+  "completed_session_count": 105,
+  "result_entry_count": 2296,
   "results_archive": {
     "url": "https://www.formula1.com/en/results/2026/races",
-    "page_sha256": "9d827dd0be209c86e040bb110660d8dd2ec9a6195178afa2f18a4f5176b19328",
+    "page_sha256": "0066e70dfaabe6f68c9640d4a1253c0c96cb6be4fbfede984f7332374098b3bf",
     "columns": [
       "Grand Prix",
       "Date",
@@ -29019,8 +29019,8 @@
       "round": 22,
       "country": "Qatar",
       "race_name": "Qatar Grand Prix",
-      "meeting_start_utc": "2026-11-27T00:00:00.000Z",
-      "meeting_end_utc": "2026-11-29T23:59:59.999Z",
+      "meeting_start_utc": "2026-11-27",
+      "meeting_end_utc": "2026-11-29",
       "timezone": "Asia/Qatar",
       "gmt_offset": "+03:00",
       "race_start_epoch": 1795968000,
@@ -29050,10 +29050,10 @@
           "start_epoch": 1795786200,
           "end_epoch": 1795789800,
           "state": "https://schema.org/EventScheduled",
-          "result_available": false,
+          "result_available": true,
           "result_url": "https://www.formula1.com/en/results/2026/races/1301/qatar/practice/1",
-          "result_count": 0,
-          "result_complete": false
+          "result_count": 22,
+          "result_complete": true
         },
         {
           "code": "p2",
@@ -29118,7 +29118,243 @@
       ],
       "podium": null,
       "winner_time": "",
-      "results": {},
+      "results": {
+        "p1": {
+          "name": "Practice 1",
+          "url": "https://www.formula1.com/en/results/2026/races/1301/qatar/practice/1",
+          "page_sha256": "0efcd8cbb34e20a8fb59ea1f49457e7f605d45b7bcf470bb4350a6f2733520b7",
+          "columns": [
+            "Pos.",
+            "No.",
+            "Driver",
+            "Team",
+            "Time / Gap",
+            "Laps"
+          ],
+          "entries": [
+            {
+              "position": 1,
+              "number": "12",
+              "name": "Kimi Antonelli",
+              "code": "ANT",
+              "team": "Mercedes",
+              "time": "1:23.217",
+              "laps": "31",
+              "points": ""
+            },
+            {
+              "position": 2,
+              "number": "63",
+              "name": "George Russell",
+              "code": "RUS",
+              "team": "Mercedes",
+              "time": "+0.507s",
+              "laps": "29",
+              "points": ""
+            },
+            {
+              "position": 3,
+              "number": "6",
+              "name": "Isack Hadjar",
+              "code": "HAD",
+              "team": "Red Bull Racing",
+              "time": "+0.661s",
+              "laps": "25",
+              "points": ""
+            },
+            {
+              "position": 4,
+              "number": "1",
+              "name": "Lando Norris",
+              "code": "NOR",
+              "team": "McLaren",
+              "time": "+0.850s",
+              "laps": "26",
+              "points": ""
+            },
+            {
+              "position": 5,
+              "number": "81",
+              "name": "Oscar Piastri",
+              "code": "PIA",
+              "team": "McLaren",
+              "time": "+0.860s",
+              "laps": "30",
+              "points": ""
+            },
+            {
+              "position": 6,
+              "number": "3",
+              "name": "Max Verstappen",
+              "code": "VER",
+              "team": "Red Bull Racing",
+              "time": "+0.916s",
+              "laps": "26",
+              "points": ""
+            },
+            {
+              "position": 7,
+              "number": "16",
+              "name": "Charles Leclerc",
+              "code": "LEC",
+              "team": "Ferrari",
+              "time": "+1.256s",
+              "laps": "30",
+              "points": ""
+            },
+            {
+              "position": 8,
+              "number": "44",
+              "name": "Lewis Hamilton",
+              "code": "HAM",
+              "team": "Ferrari",
+              "time": "+1.358s",
+              "laps": "27",
+              "points": ""
+            },
+            {
+              "position": 9,
+              "number": "41",
+              "name": "Arvid Lindblad",
+              "code": "LIN",
+              "team": "Racing Bulls",
+              "time": "+1.384s",
+              "laps": "27",
+              "points": ""
+            },
+            {
+              "position": 10,
+              "number": "10",
+              "name": "Pierre Gasly",
+              "code": "GAS",
+              "team": "Alpine",
+              "time": "+1.657s",
+              "laps": "28",
+              "points": ""
+            },
+            {
+              "position": 11,
+              "number": "5",
+              "name": "Gabriel Bortoleto",
+              "code": "BOR",
+              "team": "Audi",
+              "time": "+1.836s",
+              "laps": "25",
+              "points": ""
+            },
+            {
+              "position": 12,
+              "number": "43",
+              "name": "Franco Colapinto",
+              "code": "COL",
+              "team": "Alpine",
+              "time": "+2.192s",
+              "laps": "28",
+              "points": ""
+            },
+            {
+              "position": 13,
+              "number": "27",
+              "name": "Nico Hulkenberg",
+              "code": "HUL",
+              "team": "Audi",
+              "time": "+2.220s",
+              "laps": "29",
+              "points": ""
+            },
+            {
+              "position": 14,
+              "number": "30",
+              "name": "Liam Lawson",
+              "code": "LAW",
+              "team": "Racing Bulls",
+              "time": "+2.376s",
+              "laps": "27",
+              "points": ""
+            },
+            {
+              "position": 15,
+              "number": "51",
+              "name": "Rafael Camara",
+              "code": "CAM",
+              "team": "Haas F1 Team",
+              "time": "+2.468s",
+              "laps": "26",
+              "points": ""
+            },
+            {
+              "position": 16,
+              "number": "23",
+              "name": "Alexander Albon",
+              "code": "ALB",
+              "team": "Williams",
+              "time": "+2.475s",
+              "laps": "26",
+              "points": ""
+            },
+            {
+              "position": 17,
+              "number": "87",
+              "name": "Oliver Bearman",
+              "code": "BEA",
+              "team": "Haas F1 Team",
+              "time": "+2.549s",
+              "laps": "26",
+              "points": ""
+            },
+            {
+              "position": 18,
+              "number": "55",
+              "name": "Carlos Sainz",
+              "code": "SAI",
+              "team": "Williams",
+              "time": "+2.775s",
+              "laps": "27",
+              "points": ""
+            },
+            {
+              "position": 19,
+              "number": "34",
+              "name": "Jak Crawford",
+              "code": "CRA",
+              "team": "Aston Martin",
+              "time": "+3.089s",
+              "laps": "25",
+              "points": ""
+            },
+            {
+              "position": 20,
+              "number": "18",
+              "name": "Lance Stroll",
+              "code": "STR",
+              "team": "Aston Martin",
+              "time": "+3.199s",
+              "laps": "21",
+              "points": ""
+            },
+            {
+              "position": 21,
+              "number": "11",
+              "name": "Sergio Perez",
+              "code": "PER",
+              "team": "Cadillac",
+              "time": "+3.469s",
+              "laps": "25",
+              "points": ""
+            },
+            {
+              "position": 22,
+              "number": "77",
+              "name": "Valtteri Bottas",
+              "code": "BOT",
+              "team": "Cadillac",
+              "time": "+3.692s",
+              "laps": "27",
+              "points": ""
+            }
+          ]
+        }
+      },
       "source_url": "https://www.formula1.com/en/racing/2026/qatar"
     },
     {
@@ -29228,5 +29464,5 @@
       "source_url": "https://www.formula1.com/en/racing/2026/united-arab-emirates"
     }
   ],
-  "published_at": "2026-11-22T08:08:30Z"
+  "published_at": "2026-11-27T15:16:01Z"
 }
