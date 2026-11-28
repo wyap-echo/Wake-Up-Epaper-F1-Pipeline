@@ -4,15 +4,15 @@
     "role": "current",
     "year": 2026,
     "file": "f1-2026.f1p",
-    "size": 26009,
-    "sha256": "bbc93bc69c3aea010ff765c90c62dd9c4d8ed075bb1bdc44b8ee9083b4923b2f",
+    "size": 26165,
+    "sha256": "6b5afa35f496dc74a988b59100a810448402b8c3d3becfeb25b63ca483375c48",
     "records": 23,
     "has_podium": true,
     "has_full_results": true,
     "pack_version": 3,
-    "result_entry_count": 2318,
-    "results_bytes": 17559,
-    "generated_utc": 1795822528
+    "result_entry_count": 2340,
+    "results_bytes": 17715,
+    "generated_utc": 1795885101
   },
   "next": {
     "role": "next",
@@ -28,5 +28,5 @@
     "results_bytes": 0,
     "generated_utc": 1793694324
   },
-  "published_at": "2026-11-27T23:35:28Z"
+  "published_at": "2026-11-28T16:58:21Z"
 }
